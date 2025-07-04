@@ -3,20 +3,16 @@ import {
   QueryClientProvider,
   useQuery,
 } from "@tanstack/react-query";
+import { BASE_URL } from "./constants";
 
 const queryClient = new QueryClient();
 
 async function getBooksTitle() {
-  const response = await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        title: "The Hobbit",
-        authors: ["J.R.R. Tolkien"],
-        thumbnail: "https://ui.dev/images/courses/query/hobbit.jpg",
-      });
-    }, 1000);
-  });
-  return response;
+  const response = await fetch(`${BASE_URL}/books/pD6arNyKyi8C`);
+  if (!response.ok) {
+    throw new Error("Unable to fetch data");
+  }
+  return response.json();
 }
 
 function Loading() {
