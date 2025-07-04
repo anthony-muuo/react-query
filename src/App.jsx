@@ -7,25 +7,56 @@ import {
 const queryClient = new QueryClient();
 
 async function getBooksTitle() {
-  const response = await Promise.resolve("The Hobbit");
+  const response = await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        title: "The Hobbit",
+        authors: ["J.R.R. Tolkien"],
+        thumbnail: "https://ui.dev/images/courses/query/hobbit.jpg",
+      });
+    }, 1000);
+  });
   return response;
 }
-function Book() {
-  const { data } = useQuery({
-    queryKey: ["bookTitle"],
+
+function Loading() {
+  return <main>Loading...</main>;
+}
+
+function Error() {
+  return <main>Woops there was an error...</main>;
+}
+
+//custom hook
+function useBook() {
+  return useQuery({
+    queryKey: ["booksTitle"],
     queryFn: getBooksTitle,
   });
+}
+
+function Book() {
+  const { data, status } = useBook();
+
+  if (status === "pending") {
+    return <Loading />;
+  }
+
+  if (status === "error") {
+    return <Error />;
+  }
   return (
-    <div>
-      <header className="app-header">
-        <h1>
-          <span>Query Library</span>
-        </h1>
-      </header>
-      <main>
-        <h2 className="book-title">{data}</h2>
-      </main>
-    </div>
+    <main className="book-detail">
+      <div>
+        <span className="book-cover">
+          <img src={data.thumbnail} alt={data.title} />
+        </span>
+      </div>
+      <div>
+        <h2 className="book-title">{data.title}</h2>
+        <small className="book-author">{data.authors.join(", ")}</small>
+      </div>
+    </main>
   );
 }
 const App = () => {
