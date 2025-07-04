@@ -1,29 +1,27 @@
-import { useBook } from "../hooks/useBook";
-import Error from "./Error";
-import Loading from "./Loading";
+import { useState } from "react";
+import TheBook from "./TheBook";
 
 const Book = () => {
-  const { data, status } = useBook();
+  const [selectedBookId, setSelectedBookId] = useState("pD6arNyKyi8C");
 
-  if (status === "pending") {
-    return <Loading />;
-  }
-
-  if (status === "error") {
-    return <Error />;
-  }
   return (
-    <main className="book-detail">
+    <div>
+      <h1>
+        <span>Query Library</span>
+      </h1>
       <div>
-        <span className="book-cover">
-          <img src={data.thumbnail} alt={data.title} />
-        </span>
+        <select
+          value={selectedBookId}
+          onChange={(e) => setSelectedBookId(e.target.value)}
+        >
+          <option value="pD6arNyKyi8C">The Hobbit</option>
+          <option value="aWZzLPhY4o0C">The Fellowship Of The Ring</option>
+          <option value="12e8PJ2T7sQC">The Two Towers</option>
+          <option value="WZ0f_yUgc0UC">The Return Of The King</option>
+        </select>
+        <TheBook bookId={selectedBookId} />
       </div>
-      <div>
-        <h2 className="book-title">{data.title}</h2>
-        <small className="book-author">{data.authors.join(", ")}</small>
-      </div>
-    </main>
+    </div>
   );
 };
 
