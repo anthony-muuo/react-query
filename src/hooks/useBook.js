@@ -13,5 +13,6 @@ export function useBook(bookId) {
   return useQuery({
     queryKey: ["booksTitle", bookId],
     queryFn: () => getBooksTitle(bookId),
+    staleTime: 1000 * 5,
   });
 }
