@@ -14,5 +14,6 @@ export function useBook(bookId) {
     queryKey: ["booksTitle", bookId],
     queryFn: () => getBooksTitle(bookId),
     staleTime: 1000 * 5,
+    gcTime: 1000 * 3,
   });
 }
