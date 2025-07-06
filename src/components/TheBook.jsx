@@ -1,44 +1,31 @@
-import { useBook } from "../hooks/useBook";
+import { useBookDetails } from "../hooks/useBook";
 import Loading from "./Loading";
 import Error from "./Error";
-import StaleMessage, {
-  BackgroundStaleFetching,
-  UpToDate,
-} from "./StaleMessage";
+import Review from "./Review";
 
 const TheBook = ({ bookId }) => {
-  const { data, status, isFetching, isStale, refetch } = useBook(bookId);
+  const { book, isError, isPending, reviews } = useBookDetails(bookId);
 
-  if (status === "error") {
+  if (isError) {
     return <Error />;
   }
 
-  if (status === "pending") {
+  if (isPending) {
     return <Loading />;
-  }
-
-  function CheckoutMessage() {
-    if (isFetching) {
-      return <BackgroundStaleFetching />;
-    }
-    if (isStale) {
-      return <StaleMessage refetch={refetch} />;
-    }
-    return <UpToDate />;
   }
 
   return (
     <main className="book-detail">
       <div>
         <span className="book-cover">
-          <img src={data.thumbnail} alt={data.title} />
+          <img src={book.thumbnail} alt={book.title} />
         </span>
       </div>
       <div>
-        <h2 className="book-title">{data.title}</h2>
-        <small className="book-author">{data.authors?.join(", ")}</small>
+        <h2 className="book-title">{book.title}</h2>
+        <small className="book-author">{book.authors?.join(", ")}</small>
       </div>
-      <CheckoutMessage />
+      <Review reviews={reviews} bookId={bookId} />
     </main>
   );
 };
